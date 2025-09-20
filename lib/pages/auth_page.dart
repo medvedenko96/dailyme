@@ -13,18 +13,17 @@ class _AuthPageState extends State<AuthPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  final _nameController = TextEditingController();
   
   bool _isLogin = true;
   bool _isLoading = false;
   bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -37,12 +36,6 @@ class _AuthPageState extends State<AuthPage> {
   void _togglePasswordVisibility() {
     setState(() {
       _obscurePassword = !_obscurePassword;
-    });
-  }
-
-  void _toggleConfirmPasswordVisibility() {
-    setState(() {
-      _obscureConfirmPassword = !_obscureConfirmPassword;
     });
   }
 
@@ -62,7 +55,7 @@ class _AuthPageState extends State<AuthPage> {
       if (_isLogin) {
         success = await authService.login(_emailController.text, _passwordController.text);
       } else {
-        success = await authService.signUp(_emailController.text, _passwordController.text);
+        success = await authService.signUp(_emailController.text, _passwordController.text, _nameController.text);
       }
       
       if (mounted && success) {
@@ -116,13 +109,13 @@ class _AuthPageState extends State<AuthPage> {
     return null;
   }
 
-  String? _validateConfirmPassword(String? value) {
+  String? _validateName(String? value) {
     if (!_isLogin) {
       if (value == null || value.isEmpty) {
-        return 'Please confirm your password';
+        return 'Please enter your name';
       }
-      if (value != _passwordController.text) {
-        return 'Passwords do not match';
+      if (value.length < 2) {
+        return 'Name must be at least 2 characters long';
       }
     }
     return null;
@@ -296,6 +289,30 @@ class _AuthPageState extends State<AuthPage> {
                         ),
                       ),
                       
+                      // Name Field (only for signup)
+                      if (!_isLogin) ...[
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _nameController,
+                          validator: _validateName,
+                          decoration: InputDecoration(
+                            labelText: 'Name',
+                            prefixIcon: const Icon(Icons.person_outlined),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.grey.shade300),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(color: Colors.deepPurple),
+                            ),
+                          ),
+                        ),
+                      ],
+                      
                       const SizedBox(height: 16),
                       
                       // Password Field
@@ -325,37 +342,6 @@ class _AuthPageState extends State<AuthPage> {
                           ),
                         ),
                       ),
-                      
-                      // Confirm Password Field (only for signup)
-                      if (!_isLogin) ...[
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          controller: _confirmPasswordController,
-                          obscureText: _obscureConfirmPassword,
-                          validator: _validateConfirmPassword,
-                          decoration: InputDecoration(
-                            labelText: 'Confirm Password',
-                            prefixIcon: const Icon(Icons.lock_outlined),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
-                              ),
-                              onPressed: _toggleConfirmPasswordVisibility,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.grey.shade300),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Colors.deepPurple),
-                            ),
-                          ),
-                        ),
-                      ],
                       
                       const SizedBox(height: 24),
                       

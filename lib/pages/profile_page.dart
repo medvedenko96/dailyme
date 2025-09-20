@@ -51,11 +51,6 @@ class ProfilePage extends StatelessWidget {
                       title: const Text('Name'),
                       subtitle: const Text('User Name'),
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.calendar_today, color: Colors.deepPurple),
-                      title: const Text('Member Since'),
-                      subtitle: const Text('September 2025'),
-                    ),
                   ],
                 ),
               ),

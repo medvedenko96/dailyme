@@ -9,7 +9,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MainLayout(
       title: 'Profile',
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,6 +50,11 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.person, color: Colors.deepPurple),
                       title: const Text('Name'),
                       subtitle: const Text('User Name'),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.monitor_weight, color: Colors.deepPurple),
+                      title: const Text('Weight'),
+                      subtitle: const Text('70 kg'),
                     ),
                   ],
                 ),

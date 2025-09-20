@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'home_page.dart';
+import 'physical_info_page.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -44,24 +45,32 @@ class _AuthPageState extends State<AuthPage> {
       return;
     }
 
+    // If it's signup, navigate to physical info page
+    if (!_isLogin) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PhysicalInfoPage(
+            email: _emailController.text,
+            password: _passwordController.text,
+            name: _nameController.text,
+          ),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
     try {
       final authService = AuthService();
-      bool success;
-      
-      if (_isLogin) {
-        success = await authService.login(_emailController.text, _passwordController.text);
-      } else {
-        success = await authService.signUp(_emailController.text, _passwordController.text, _nameController.text);
-      }
+      bool success = await authService.login(_emailController.text, _passwordController.text);
       
       if (mounted && success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(_isLogin ? 'Login successful!' : 'Account created successfully!'),
+          const SnackBar(
+            content: Text('Login successful!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -368,7 +377,9 @@ class _AuthPageState extends State<AuthPage> {
                                   ),
                                 )
                               : Text(
-                                  _isLogin ? 'Login' : 'Sign Up',
+                                  _isLogin 
+                                    ? 'Login' 
+                                    : 'Next',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,

@@ -27,13 +27,13 @@ class AuthService {
     }
   }
 
-  Future<bool> signUp(String email, String password, String name) async {
+  Future<bool> signUp(String email, String password, String name, String weight, String height) async {
     try {
       // Simulate API call delay
       await Future.delayed(const Duration(seconds: 2));
       
       // Simple validation - in a real app, this would be an API call
-      if (email.isNotEmpty && password.length >= 6 && name.isNotEmpty) {
+      if (email.isNotEmpty && password.length >= 6 && name.isNotEmpty && weight.isNotEmpty && height.isNotEmpty) {
         _isAuthenticated = true;
         _currentUserEmail = email;
         return true;

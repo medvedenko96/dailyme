@@ -1,26 +1,14 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import 'auth_page.dart';
+import '../components/main_layout.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('DailyMe'),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              _showLogoutDialog(context);
-            },
-          ),
-        ],
-      ),
+    return MainLayout(
+      title: 'DailyMe',
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -58,37 +46,6 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  void _showLogoutDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Logout'),
-          content: const Text('Are you sure you want to logout?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Logout and navigate back to auth page
-                AuthService().logout();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const AuthPage()),
-                );
-              },
-              child: const Text('Logout'),
-            ),
-          ],
-        );
-      },
     );
   }
 }

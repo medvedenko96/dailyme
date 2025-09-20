@@ -1,3 +1,6 @@
+import '../api/services/api_service.dart';
+import '../api/models/user_registration_request.dart';
+
 class AuthService {
   static final AuthService _instance = AuthService._internal();
   factory AuthService() => _instance;
@@ -29,17 +32,23 @@ class AuthService {
 
   Future<bool> signUp(String email, String password, String name, String weight, String height) async {
     try {
-      // Simulate API call delay
-      await Future.delayed(const Duration(seconds: 2));
-      
-      // Simple validation - in a real app, this would be an API call
-      if (email.isNotEmpty && password.length >= 6 && name.isNotEmpty && weight.isNotEmpty && height.isNotEmpty) {
+      final request = UserRegistrationRequest(
+        email: email,
+        password: password,
+        name: name,
+        weight: weight,
+        height: height,
+      );
+
+      final response = await ApiService.registerUser(request);
+
+      if (response.success) {
         _isAuthenticated = true;
         _currentUserEmail = email;
         return true;
+      } else {
+        throw Exception(response.message);
       }
-      
-      throw Exception('Invalid user data');
     } catch (e) {
       throw Exception('Sign up failed: ${e.toString()}');
     }
